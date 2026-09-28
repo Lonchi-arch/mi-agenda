@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#173b45" />
+    <meta name="description" content="Agenda personal, notas y recordatorios guardados en tu dispositivo." />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Mi Agenda" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Mi Agenda</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="today-label"></p>
+          <h1>Mi Agenda</h1>
+        </div>
+        <button class="icon-button" id="backup-button" aria-label="Copias de seguridad" title="Copias de seguridad">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2"/></svg>
+        </button>
+      </header>
+
+      <main>
+        <section class="view active" id="home-view" aria-labelledby="home-heading">
+          <div class="welcome-row">
+            <div>
+              <h2 id="home-heading">¿Qué quieres hacer?</h2>
+              <p>Elige una opción para empezar.</p>
+            </div>
+            <span class="privacy-badge"><span aria-hidden="true">●</span> Solo en este dispositivo</span>
+          </div>
+
+          <div id="due-panel" class="due-panel" hidden></div>
+
+          <div class="action-grid" aria-label="Opciones principales">
+            <button class="action-card agenda-card" data-view="agenda">
+              <span class="card-icon">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 3v3m12-3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z"/></svg>
+              </span>
+              <span class="card-copy"><strong>Agenda</strong><small>Consulta tus días</small></span>
+              <span class="card-arrow" aria-hidden="true">›</span>
+            </button>
+            <button class="action-card event-card" data-create="event">
+              <span class="card-icon">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg>
+              </span>
+              <span class="card-copy"><strong>Evento</strong><small>Citas y cumpleaños</small></span>
+              <span class="card-arrow" aria-hidden="true">›</span>
+            </button>
+            <button class="action-card reminder-card" data-create="reminder">
+              <span class="card-icon">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4"/></svg>
+              </span>
+              <span class="card-copy"><strong>Recordatorio</strong><small>No olvides lo importante</small></span>
+              <span class="card-arrow" aria-hidden="true">›</span>
+            </button>
+            <button class="action-card note-card" data-create="note">
+              <span class="card-icon">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5V3Zm10 0v5h4M8 12h8M8 16h6"/></svg>
+              </span>
+              <span class="card-copy"><strong>Nota</strong><small>Guarda ideas y apuntes</small></span>
+              <span class="card-arrow" aria-hidden="true">›</span>
+            </button>
+          </div>
+
+          <section class="today-section" aria-labelledby="today-heading">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">UN VISTAZO</p>
+                <h2 id="today-heading">Para hoy</h2>
+              </div>
+              <button class="text-button" data-view="agenda">Ver agenda</button>
+            </div>
+            <div id="today-list" class="entry-list"></div>
+          </section>
+        </section>
+
+        <section class="view" id="agenda-view" aria-labelledby="agenda-heading">
+          <div class="view-title-row">
+            <button class="back-button" data-view="home" aria-label="Volver">‹</button>
+            <div><p class="eyebrow">TUS FECHAS</p><h2 id="agenda-heading">Agenda</h2></div>
+            <button class="small-add" data-create="event" aria-label="Añadir evento">+</button>
+          </div>
+          <div class="calendar-card">
+            <div class="calendar-header">
+              <button id="prev-month" class="month-button" aria-label="Mes anterior">‹</button>
+              <strong id="month-label"></strong>
+              <button id="next-month" class="month-button" aria-label="Mes siguiente">›</button>
+            </div>
+            <div class="weekday-row" aria-hidden="true"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+            <div id="calendar-grid" class="calendar-grid"></div>
+          </div>
+          <div class="section-heading selected-heading">
+            <div><p class="eyebrow">SELECCIONADO</p><h3 id="selected-date-label"></h3></div>
+            <button class="text-button" data-create="reminder">+ Recordatorio</button>
+          </div>
+          <div id="selected-day-list" class="entry-list"></div>
+          <section class="all-section">
+            <div class="section-heading"><h3>Próximos</h3></div>
+            <div id="upcoming-list" class="entry-list"></div>
+          </section>
+        </section>
+
+        <section class="view" id="notes-view" aria-labelledby="notes-heading">
+          <div class="view-title-row">
+            <button class="back-button" data-view="home" aria-label="Volver">‹</button>
+            <div><p class="eyebrow">TUS IDEAS</p><h2 id="notes-heading">Notas</h2></div>
+            <button class="small-add" data-create="note" aria-label="Añadir nota">+</button>
+          </div>
+          <label class="search-box">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg>
+            <input id="note-search" type="search" placeholder="Buscar en mis notas" autocomplete="off" />
+          </label>
+          <div id="notes-list" class="notes-grid"></div>
+        </section>
+      </main>
+
+      <nav class="bottom-nav" aria-label="Navegación principal">
+        <button class="nav-item active" data-view="home"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8v10h-6v-6H9v6H3V11Z"/></svg><span>Inicio</span></button>
+        <button class="nav-item" data-view="agenda"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 3v3m12-3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z"/></svg><span>Agenda</span></button>
+        <button class="nav-add" data-create="event" aria-label="Añadir una entrada">+</button>
+        <button class="nav-item" data-view="notes"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5V3Zm10 0v5h4M8 12h8M8 16h6"/></svg><span>Notas</span></button>
+        <button class="nav-item" id="nav-backup"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2"/></svg><span>Copia</span></button>
+      </nav>
+    </div>
+
+    <dialog id="entry-dialog" class="sheet-dialog">
+      <form method="dialog" class="sheet" id="entry-form">
+        <div class="sheet-handle" aria-hidden="true"></div>
+        <div class="sheet-header">
+          <div><p class="eyebrow" id="dialog-eyebrow">NUEVA ENTRADA</p><h2 id="dialog-title">Añadir</h2></div>
+          <button type="button" class="close-button" data-close-dialog aria-label="Cerrar">×</button>
+        </div>
+
+        <div class="dialog-step active" id="mode-step">
+          <p class="step-question">¿Cómo quieres añadirlo?</p>
+          <div class="mode-options">
+            <button type="button" class="mode-button voice-mode" data-mode="voice">
+              <span class="mode-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="8" y="3" width="8" height="12" rx="4"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/></svg></span>
+              <strong>Por voz</strong><small>Dicta una frase</small>
+            </button>
+            <button type="button" class="mode-button" data-mode="text">
+              <span class="mode-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 20h4l11-11-4-4L4 16v4Zm9-13 4 4M13 20h7"/></svg></span>
+              <strong>Escribir</strong><small>Usa el teclado</small>
+            </button>
+          </div>
+        </div>
+
+        <div class="dialog-step" id="capture-step">
+          <button type="button" class="step-back" data-step="mode">‹ Cambiar opción</button>
+          <div id="voice-help" class="voice-help" hidden>
+            <span class="listening-dot" aria-hidden="true"></span>
+            <div><strong>Listo para dictar</strong><p>Toca el micrófono del teclado y di la frase completa.</p></div>
+          </div>
+          <label for="raw-input" class="field-label" id="raw-label">Cuéntame qué quieres guardar</label>
+          <textarea id="raw-input" rows="5" maxlength="1000" placeholder="Ejemplo: Dentista mañana a las cinco de la tarde"></textarea>
+          <p class="input-hint" id="input-hint">Incluye la fecha y la hora si las conoces.</p>
+          <button type="button" class="primary-button" id="interpret-button">Revisar</button>
+        </div>
+
+        <div class="dialog-step" id="review-step">
+          <button type="button" class="step-back" data-step="capture">‹ Volver a la frase</button>
+          <div class="review-banner"><span aria-hidden="true">✓</span><p><strong>Comprueba los datos</strong><br />Puedes corregirlos antes de guardar.</p></div>
+          <label class="form-field"><span>Título</span><input id="entry-title" required maxlength="160" /></label>
+          <label class="form-field" id="details-field"><span>Detalles <small>(opcional)</small></span><textarea id="entry-details" rows="3" maxlength="2000"></textarea></label>
+          <div class="form-row" id="date-row">
+            <label class="form-field"><span>Fecha</span><input id="entry-date" type="date" /></label>
+            <label class="form-field"><span>Hora <small>(opcional)</small></span><input id="entry-time" type="time" /></label>
+          </div>
+          <label class="check-field" id="annual-field"><input id="entry-annual" type="checkbox" /><span>Repetir cada año</span></label>
+          <input id="editing-id" type="hidden" />
+          <button type="submit" class="primary-button">Guardar</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="backup-dialog" class="sheet-dialog">
+      <div class="sheet backup-sheet">
+        <div class="sheet-handle" aria-hidden="true"></div>
+        <div class="sheet-header"><div><p class="eyebrow">TUS DATOS</p><h2>Copia de seguridad</h2></div><button class="close-button" data-close-backup aria-label="Cerrar">×</button></div>
+        <p class="backup-intro">Guarda una copia en Archivos para poder recuperar tu agenda si cambias de móvil.</p>
+        <div class="backup-actions">
+          <button class="backup-action" id="export-button"><span>↓</span><div><strong>Guardar una copia</strong><small>Descarga un archivo con tus datos</small></div></button>
+          <label class="backup-action"><span>↑</span><div><strong>Recuperar una copia</strong><small>Elige un archivo guardado</small></div><input id="import-input" type="file" accept="application/json,.json" hidden /></label>
+        </div>
+        <p class="last-backup" id="last-backup"></p>
+      </div>
+    </dialog>
+
+    <dialog id="confirm-dialog" class="confirm-dialog">
+      <div class="confirm-card"><div class="danger-icon">!</div><h2>¿Eliminar esta entrada?</h2><p>La quitaremos de tu agenda.</p><div class="confirm-actions"><button id="cancel-delete" class="secondary-button">Cancelar</button><button id="confirm-delete" class="danger-button">Eliminar</button></div></div>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="app.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+.agents/
+.codex/
+.git-placeholder/
+.agenda-git/
+.sites-runtime/
+agenda-preview.png
+*.log
